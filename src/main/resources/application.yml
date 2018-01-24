@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: OAUTH
+  zipkin:
+    baseUrl: http://ip-172-31-12-174.ap-northeast-2.compute.internal:9411
+  sleuth:
+    sampler:
+      percentage: 0.2
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+server:
+  port: 8080
+  contextPath: /
+  jmx:
+    default-domain: oauth
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: false
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+endpoints:
+  shutdown:
+    enabled: true
+    sensitive: false
+---
+spring:
+  profiles: prd
+logging:
+  config: classpath:logback-prd.xml
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://ip-172-31-13-153.ap-northeast-2.compute.internal:8761/eureka/
+---
+spring:
+  profiles: dev
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+---
+spring:
+  profiles: ide
+logging:
+  config: classpath:logback-ide.xml
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: https://eureka.toanyone.io/eureka/
