@@ -1,4 +1,4 @@
-# AI Developer Portal OAuth Server 
+# OAuth Server 
 
 ## Spring Profile
 
@@ -9,11 +9,11 @@
 ## RSA Key Generation
 
 1. keytool -genkeypair \
-       -alias ktds \
+       -alias sicc \
        -keyalg RSA \
-       -dname "CN=Auth,OU=,O=ktds,L=Seoul,S=Seoul,C=KR" \
+       -dname "CN=Auth,OU=,O=sicc,L=Seoul,S=Seoul,C=KR" \
        -keypass new1234! \
-       -keystore ktds.jks \
+       -keystore sicc.jks \
        -storepass new1234!
-1. keytool -export -keystore ./ktds.jks -alias ktds -file ktds.cer
-1. openssl x509 -inform der -in ./ktds.cer -pubkey -noout
+1. keytool -export -keystore ./sicc.jks -alias sicc -file sicc.cer
+1. openssl x509 -inform der -in ./sicc.cer -pubkey -noout

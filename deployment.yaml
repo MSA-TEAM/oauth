@@ -1,0 +1,29 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: msa-oauth
+  labels:
+    app: msa-oauth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: msa-oauth
+  template:
+    metadata:
+      labels:
+        app: msa-oauth
+        version: "1.0.0"
+    spec:
+      containers:
+      - name: ms-user
+        image: docker.gsp.sicc.co.kr/oauth:1.0.0
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+        - name: spring.cloud.config.uri
+          value: http://100.102.123.206:8888
+        ports:
+        - name: http
+          containerPort: 8080

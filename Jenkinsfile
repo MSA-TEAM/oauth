@@ -1,34 +1,59 @@
+#!groovy
 node {
 
-    stage ('소스체크아웃') {
-        checkout([$class: 'GitSCM',
-            branches: [[name: '*/master']],
-            doGenerateSubmoduleConfigurations: false, extensions: [],
-            submoduleCfg: [],
-            userRemoteConfigs: [[credentialsId: 'DevPro', url: 'https://devpro.ktds.co.kr/msa/oauth.git']]])
+    stage('Checkout') {
+        checkout scm
     }
 
-    stage ('스크립팅'){
-        sh 'ssh ec2-user@ip-172-31-2-237 "mkdir -p /home/ec2-user/oauth/log"'
-        sh 'scp ./start.sh ec2-user@ip-172-31-2-237:/home/ec2-user/oauth'
-        sh 'scp ./shutdown.sh ec2-user@ip-172-31-2-237:/home/ec2-user/oauth'
-        sh 'ssh ec2-user@ip-172-31-2-237 "chmod a+x /home/ec2-user/oauth/*.sh"'
+    stage('Test') {
+        sh './gradlew test || true'
     }
 
-    stage ('서버 정지'){
-        sh 'ssh ec2-user@ip-172-31-2-237 "/home/ec2-user/oauth/shutdown.sh || true"'
+    stage('Build') {
+        try {
+            sh './gradlew clean build -x test'
+        } catch(e) {
+            mail subject: "Jenkins Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failed with ${e.message}",
+                to: 'jungim.kim@sicc.co.kr',
+                body: "Please go to $env.BUILD_URL."
+        }
     }
 
-    stage ('빌드') {
-        sh './gradlew clean build'
+    stage('Archive') {
+        parallel (
+            "Archive Artifacts" : {
+                archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
+            },
+            "Docker Image Push" : {
+                sh './gradlew dockerPush'
+            }
+        )
     }
 
-    stage ('배포') {
-        sh 'scp build/libs/oauth-1.0.0-RELEASE.jar ec2-user@ip-172-31-2-237:/home/ec2-user/oauth'
+    stage('Deploy') {
+        sh 'kubectl apply --namespace=development -f deployment.yaml'
     }
 
-    stage ('서버 시작') {
-        sh 'ssh ec2-user@ip-172-31-2-237 "/home/ec2-user/oauth/start.sh /home/ec2-user/oauth/oauth-1.0.0-RELEASE.jar prd"'
-    }
-
+    properties([
+        pipelineTriggers([
+            [$class: 'GenericTrigger',
+                genericVariables: [
+                    [expressionType: 'JSONPath', key: 'before', value: '$.before'],
+                    [expressionType: 'JSONPath', key: 'after', value: '$.after'],
+                    [expressionType: 'JSONPath', key: 'reference', value: '$.ref'],
+                    [expressionType: 'JSONPath', key: 'repository', value: '$.repository.full_name']
+                ],
+                genericRequestVariables: [
+                    [key: 'requestWithNumber', regexpFilter: '[^0-9]'],
+                    [key: 'requestWithString', regexpFilter: '']
+                ],
+                genericHeaderVariables: [
+                    [key: 'headerWithNumber', regexpFilter: '[^0-9]'],
+                    [key: 'headerWithString', regexpFilter: '']
+                ],
+                regexpFilterText: '$repository/$reference',
+                regexpFilterExpression: 'MSA/apireg/refs/heads/master'
+            ]
+        ])
+    ])
 }
