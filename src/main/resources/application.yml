@@ -12,9 +12,6 @@ spring:
       charset: UTF-8
 server:
   port: 8080
-  contextPath: /
-  jmx:
-    default-domain: oauth
 eureka:
   client:
     registerWithEureka: true
@@ -24,10 +21,6 @@ eureka:
     instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 2
-endpoints:
-  shutdown:
-    enabled: true
-    sensitive: false
 ---
 spring:
   profiles: prd

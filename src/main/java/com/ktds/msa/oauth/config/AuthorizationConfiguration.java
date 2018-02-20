@@ -27,15 +27,18 @@ public class AuthorizationConfiguration extends AuthorizationServerConfigurerAda
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private HttpClientDetailsService clientDetailsService;
-
-    @Autowired
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService);
+        clients.withClientDetails(new HttpClientDetailsService());
+//        clients.inMemory()
+//                .withClient("msa")
+//                .secret("1234")
+//                .authorities("ROLE_USER")
+//                .scopes("read","write")
+//                .authorizedGrantTypes("client_credentials");
     }
 
 
@@ -56,10 +59,10 @@ public class AuthorizationConfiguration extends AuthorizationServerConfigurerAda
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        KeyStoreKeyFactory factory =  new KeyStoreKeyFactory(new ClassPathResource("ktds.jks"), "new1234!".toCharArray());
+        KeyStoreKeyFactory factory =  new KeyStoreKeyFactory(new ClassPathResource("sicc.jks"), "new1234!".toCharArray());
 
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setKeyPair(factory.getKeyPair("ktds"));
+        converter.setKeyPair(factory.getKeyPair("sicc"));
         return converter;
     }
 

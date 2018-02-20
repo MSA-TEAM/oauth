@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
-    @Autowired
-    private HttpUserDetailsService userDetailsService;
+//    @Autowired
+//    private HttpUserDetailsService userDetailsService;
 
     @Override
     @Bean
@@ -41,6 +41,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(new HttpUserDetailsService());
     }
 }

@@ -1,6 +1,5 @@
 package com.ktds.msa.oauth.details;
 
-import com.ktds.msa.oauth.details.BaseUserDetails;
 import com.ktds.msa.oauth.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +24,6 @@ public class HttpUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        BaseUserDetails userDetails = null;
-
-
         UriComponents uriComponents = UriComponentsBuilder.fromUriString("http://USER/user/{userId}")
                 .buildAndExpand(username)
                 .encode();
@@ -37,7 +32,7 @@ public class HttpUserDetailsService implements UserDetailsService {
 
         if(entity==null) throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
 
-        userDetails = new BaseUserDetails();
+        BaseUserDetails userDetails = new BaseUserDetails();
 
         User user = entity.getBody();
 
