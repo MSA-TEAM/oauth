@@ -34,8 +34,11 @@ group = 'docker.gsp.sicc.co.kr'
 
 docker {
 	name "${project.group}/${jar.baseName}:${jar.version}"
+	tags 'latest'
 	files jar.archivePath
 	buildArgs(['JAR_FILE': "${jar.archiveName}"])
+	pull true
+	noCache true
 }
 
 
@@ -48,6 +51,7 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	compile('org.springframework.cloud:spring-cloud-starter-zipkin')
 	compile("org.springframework.cloud:spring-cloud-starter-oauth2")
+	compile('org.springframework.cloud:spring-cloud-config-server')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

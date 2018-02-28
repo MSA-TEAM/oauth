@@ -1,7 +1,6 @@
 package com.ktds.msa.oauth.config;
 
 import com.ktds.msa.oauth.details.HttpUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-
-//    @Autowired
-//    private HttpUserDetailsService userDetailsService;
 
     @Override
     @Bean
