@@ -15,7 +15,7 @@ spec:
         app: msa-oauth
     spec:
       containers:
-      - name: ms-user
+      - name: ms-oauth
         image: docker.gsp.sicc.co.kr/oauth:1.0.1
         env:
         - name: SPRING_PROFILES_ACTIVE
