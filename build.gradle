@@ -10,7 +10,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2"
+		classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2"
 	}
 }
 
@@ -51,7 +51,6 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	compile('org.springframework.cloud:spring-cloud-starter-zipkin')
 	compile("org.springframework.cloud:spring-cloud-starter-oauth2")
-	compile('org.springframework.cloud:spring-cloud-config-server')
 	compile('org.springframework.cloud:spring-cloud-starter-config')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
