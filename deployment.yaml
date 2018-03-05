@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: ms-user
-        image: docker.gsp.sicc.co.kr/oauth:1.0.0
+        image: docker.gsp.sicc.co.kr/oauth:1.0.1
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: dev
